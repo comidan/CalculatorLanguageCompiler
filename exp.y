@@ -91,7 +91,37 @@ decl : VAR DECL {
 			list->value = $3;
 			$$ = 1;
 		    }
-     | decl ',' decl {$$ = $1 + $3;};
+     | decl ',' VAR DECL {
+                        if(list == NULL) {
+				list = (List*) malloc(sizeof(List));
+				list->prev = NULL;
+			}
+			else {
+				list->next = (List*) malloc(sizeof(List));
+				list->next->prev = list;
+				list = list->next;
+			}
+			list->variable = $3;
+			printf("Insert value of %s\n", $3);
+			scanf("%d", &(list->value));
+                        $$ = $1 + 1;}
+                        
+     | decl ',' VAR '=' NUMBER {
+
+			if(list == NULL) {
+				list = (List*) malloc(sizeof(List));
+				list->prev = NULL;
+			}
+			else {
+				list->next = (List*) malloc(sizeof(List));
+				list->next->prev = list;
+				list = list->next;
+			}
+			list->variable = $3;
+			list->value = $5;
+			$$ = $1 + 1;
+                        }
+    ;
 
 oper : oper '+' oper {$$ = $1 + $3;}
      | oper '-' oper {$$ = $1 - $3;}
